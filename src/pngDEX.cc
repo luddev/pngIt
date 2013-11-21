@@ -46,10 +46,10 @@ chunk * loadChunk(FILE *pngFile,long int &offset)
 	fread(temp,4,1,pngFile);
 	cType->length = (temp[0]<<24) | (temp[1]<<16) | (temp[2]<<8) | temp[3];
 	std::cout<<"Chunk Length : "<<cType->length<<std::endl;
-	//below line is reading more than 4 bytes some times 
+	//below line is not reading 4 bytes some times 
 	//need to fix this.
-	std::size_t bytesread;
-	bytesread = fread((void *)cType->chunkName,4,1,pngFile);
+	std::size_t bytesread = 0;
+	bytesread = fread((void *)cType->chunkName,1,4,pngFile);
 
 	if( bytesread != 4)	{
 		std::cout<<"Reading Unspecified Amount of Data , Bytesread = "<<bytesread<<std::endl;
@@ -62,10 +62,10 @@ chunk * loadChunk(FILE *pngFile,long int &offset)
 		std::cout<<"Unable to allocate data. "<<std::endl;
 		return NULL;
 	}
-	fread(cType->chunkData,cType->length,1,pngFile);
+	fread(cType->chunkData,1,cType->length,pngFile);
 	std::cout<<"Chunk Data : "<<cType->chunkData<<std::endl;
 	memset(temp,0,4);
-	fread(temp,4,1,pngFile);
+	fread(temp,1,4,pngFile);
 	cType->CRC = (temp[0]<<24) | (temp[1]<<16) | (temp[2]<<8) | temp[3];
 	std::cout<<"CRC : "<<cType->CRC<<std::endl;
 
@@ -163,7 +163,7 @@ void openPng(char *infileName,char *outfileName)
 	}
 	if(!isPng)
 		return;
-	std::cout<<"Signature Matches as that of a PNG file."<<std::endl;
+	std::cout<<"Signature Matches as that of a PNG file."<<std::endl<<std::endl;
 
 	/*
 	loadChunk(&pngF.IHDR,pngFile);
