@@ -10,8 +10,11 @@
  */
 
 
-#ifndef _PNG_ENCIPHER_H
-#define _PNG_ENCIPHER_H
+#ifndef _PNG_IT_H
+#define _PNG_IT_H
+
+#include <vector>
+#include <string>
 
 /*
  *	Source: http://en.wikipedia.org/wiki/Portable_Network_Graphics
@@ -43,18 +46,34 @@ struct pngFileFormat	{
 
 };
 
-void openPng(char *infileName,char *outfileName);
+class pngIt {
+	private:
+		FILE *pngInFile;	//PNG Input File.
+		FILE *pngOutFile;	//PNG Output File. 
+		char *plainText;
+		unsigned char signature[8];
+		long int offset;	//Current Offset of File Pointer.
+		long int currentFP;	//Current Position of File Pointer.
+		std::vector<chunk> chunkList;	//A Hash Map container for ChunkList, char * corresnponds to the name of Chunk.
+		chunk tempChunk;
 
-void pngEncrypt(char *plainText);
+	public:
+		pngIt();
+		pngIt(char *inFile, char *outFile);
+		pngIt(char *inFile, char *outFile, char *plainText);
 
-void pngDecrypt();
+		bool verifyIsPNG();
+		bool readChunks();
 
-void usage(std::string &programName);
 
-void loadChunk(chunk *cType, FILE *pngFile);
 
-chunk * loadChunk(FILE *pngFile, long int &offset);
 
-void copyPng(FILE *inpngFile, FILE *opngFile);
 
-#endif // _PNG_ENCIPHER_H
+};
+
+//	Add function declaration here.
+
+
+
+
+#endif // _PNG_IT_H
