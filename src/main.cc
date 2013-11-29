@@ -17,5 +17,7 @@ int main(int argc, char **argv)
     png.readChunks();
     std::cout<<"[!] Procceding to Encryption stage."<<std::endl;
 
+	//Code Above seems to be working fine :)
+
     return 0;
 }

@@ -8,6 +8,9 @@
 
 pngIt::pngIt()
 {
+    offset = 0;
+    currentFP = 0;
+    plainText = NULL;
     memset(&tempChunk,0,sizeof(tempChunk));
 }
 
@@ -65,28 +68,58 @@ bool pngIt::verifyIsPNG()
 
 bool pngIt::readChunks()
 {
-    char temp[4];
-    std::string tempKey;
-    tempKey.clear();
+    unsigned char temp[4];
+    int i=0;
+    
     while(1) {
         if(feof(pngInFile)) {
             std::cout<<"[*] End of File reached."<<std::endl;
             return true;
         }
+		std::cout<<std::endl<<std::endl;
+		offset = ftell(pngInFile);
+		std::cout<<std::hex<<std::showbase<<"PNG File Current Offset "<<offset<<std::endl<<std::endl;
+		memset(&temp,0,4);
         memset(&tempChunk,0,sizeof(tempChunk));
         fread((void *)temp,1,4,pngInFile);
         tempChunk.length = (temp[0]<<24) | (temp[1]<<16) | (temp[2]<<8) | temp[3];
-        fread((void *)tempChunk.chunkName,1,4,pngInFile);
+		fread((void *)tempChunk.chunkName,4,1,pngInFile);
         tempChunk.chunkData = new unsigned char[tempChunk.length];
-        fread((void *)tempChunk.chunkData,1,tempChunk.length,pngInFile);
-        fread((void *)temp,1,4,pngInFile);
+        fread((void *)tempChunk.chunkData,tempChunk.length,1,pngInFile);
+		memset(&temp,0,sizeof(temp));
+        fread((void *)temp,4,1,pngInFile);
         tempChunk.CRC = (temp[0]<<24) | (temp[1]<<16) | (temp[2]<<8) | temp[3];
-        tempKey = (const char *)tempChunk.chunkName;
-        chunkList.push_back(tempChunk);
         
-        std::cout<<"Stored Chunk with Key = "<<tempKey.c_str()<<std::endl;
-        delete[] tempChunk.chunkData;
-        tempKey.clear();
+		//Display Data
+		std::cout<<"Stored Chunk with Key = ";
+		for(i=0;i<4;i++)	{
+
+			std::cout<<tempChunk.chunkName[i];
+		}
+		std::cout<<std::endl;
+		std::cout<<"Lenght of chunkData = "<<tempChunk.length<<std::endl;
+		std::cout<<"Stored Chunk with Data = ";
+        chunkList.push_back(tempChunk);
+        for(i=0;i<tempChunk.length;i++)	{
+
+			std::cout<<std::hex<<std::showbase<<(int)tempChunk.chunkData[i]<<"\t";
+		}
+		std::cout<<std::endl;
+        std::cout<<"CRC = "<<tempChunk.CRC<<std::endl;
+
+		std::cout<<std::endl<<std::endl;
+		delete[] tempChunk.chunkData;
+		currentFP = ftell(pngInFile);
+
+		//std::cout<<std::hex<<"PNG File Current FP "<<currentFP<<std::endl;
+
+		if(tempChunk.chunkName[0] == 'I')
+			if(tempChunk.chunkName[1] == 'E')
+				if(tempChunk.chunkName[2] == 'N')
+					if(tempChunk.chunkName[3] == 'D')
+						return true;
+
+
     }
 
     return true;

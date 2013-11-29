@@ -37,14 +37,7 @@ struct chunk	{
 	unsigned long CRC;
 };
 
-struct pngFileFormat	{
-	unsigned char signature[8];
-	chunk IHDR;
-	chunk PLTE;
-	chunk IDAT; 
-	chunk IEND;
 
-};
 
 class pngIt {
 	private:
