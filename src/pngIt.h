@@ -1,12 +1,11 @@
-/*		pngEncoder/Decoder
+/*				pngIt
  *	Author : ludkiller
- *	Last updated : 11/20/2013 00:07
+ *	Last updated : 11/29/2013 21:19
  *	brief : Add stuff here.
  *
  *		TODO : 
- *			=> Write base 64 Encoder/Decoder helper functions.
+ *			=> Write base 64 Encoder/Decoder helper functions. //DONE 
  *			=> Add a license.
- *			=> Add Recognition of more chunks.
  */
 
 
@@ -37,6 +36,7 @@ struct chunk	{
 	unsigned long CRC;
 };
 
+const unsigned char eocFlag[] = { 0xFF , 0xEE , 0xDD };
 
 
 class pngIt {
@@ -50,6 +50,8 @@ class pngIt {
 		std::vector<chunk> chunkList;	//A Hash Map container for ChunkList, char * corresnponds to the name of Chunk.
 		chunk tempChunk;
 
+		
+
 	public:
 		pngIt();
 		pngIt(char *inFile, char *outFile);
@@ -57,16 +59,9 @@ class pngIt {
 
 		bool verifyIsPNG();
 		bool readChunks();
-
-
-
+		bool rebuildIDAT(const char *encodedText);
 
 
 };
-
-//	Add function declaration here.
-
-
-
 
 #endif // _PNG_IT_H

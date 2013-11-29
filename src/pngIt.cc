@@ -1,3 +1,13 @@
+/*				pngIt
+ *	Author : ludkiller
+ *	Last updated : 11/29/2013 21:19
+ *	brief : Add stuff here.
+ *
+ *		TODO : 
+ *			=> Write base 64 Encoder/Decoder helper functions.	//DONE
+ *			=> Add a license.
+ */
+
 #include <iostream>
 #include <cstdio>
 #include <cstdlib>
@@ -93,7 +103,6 @@ bool pngIt::readChunks()
 		//Display Data
 		std::cout<<"Stored Chunk with Key = ";
 		for(i=0;i<4;i++)	{
-
 			std::cout<<tempChunk.chunkName[i];
 		}
 		std::cout<<std::endl;
@@ -101,7 +110,6 @@ bool pngIt::readChunks()
 		std::cout<<"Stored Chunk with Data = ";
         chunkList.push_back(tempChunk);
         for(i=0;i<tempChunk.length;i++)	{
-
 			std::cout<<std::hex<<std::showbase<<(int)tempChunk.chunkData[i]<<"\t";
 		}
 		std::cout<<std::endl;
@@ -124,4 +132,30 @@ bool pngIt::readChunks()
 
     return true;
 
+}
+
+bool pngIt::rebuildIDAT(const char *encodedText)
+{
+	//IDAT rebuilding code in here.
+	//std::vector<chunk>::iterator i;
+	
+	int len = chunkList.size();
+	int index;
+	for(index = 0; index < len ; index++)	{
+		if(chunkList[index].chunkName[0] == 'I')
+			if(chunkList[index].chunkName[1] == 'D')
+				if(chunkList[index].chunkName[2] == 'A')
+					if(chunkList[index].chunkName[3] == 'T')
+						break;
+	}
+	
+	tempChunk = chunkList[index];
+	int i = 0;
+	for(i=0;i<4;i++)	{
+		std::cout<<tempChunk.chunkName[i];
+	}
+
+
+
+	return true;
 }
