@@ -1,67 +1,48 @@
-/*				pngIt
- *	Author : ludkiller
- *	Last updated : 11/29/2013 21:19
- *	brief : Add stuff here.
- *
- *		TODO : 
- *			=> Write base 64 Encoder/Decoder helper functions. //DONE 
- *			=> Add a license.
- */
-
-
 #ifndef _PNG_IT_H
 #define _PNG_IT_H
 
-#include <vector>
-#include <string>
+#include "common.h"
+
+extern "C" {
+
+
+    extern FILE *pngIt_src;
+    extern FILE *pngIt_dst;
+
+    enum PNGIT {
+	PNG_INIT,
+	PNG_INIT_ERROR,
+	PNG_OK,
+	PNG_ERROR,
+	PNG_DECODE_ERROR,
+	PNG_DECODED,
+	PNG_ENCODE_ERROR,
+	PNG_ENCODED,
+	PNG_DISPOSED,
+	PNG_DISPOSE_ERROR
+    };
 
 /*
- *	Source: http://en.wikipedia.org/wiki/Portable_Network_Graphics
- *	PNG Signature : 0x89 0x50 0x4E 0x47 0x0D 0x0A 0x1A 0x0A
- *	PNG file is made up of chunks
- *	Chunk Format:
- *	Length 		Chunk Type		Chunk Data 		CRC
- *	4 Bytes 	4 Bytes			Length Bytes 	4 Bytes
- *	
- *	IHDR : Must be the first chunk, It contains the image width, height and depth.
- *	PLTE : Contains the pallete; list of colors.
- *	IDAT : Contains actual image data.
- *	IEND : Marks the image end.
+ *	pngIt_Init() 
+ *	Usage : Initialize pngIt. 
  */
 
-struct chunk	{
-	unsigned long length;
-	unsigned char chunkName[4];
-	unsigned char *chunkData;
-	unsigned long CRC;
-};
+    int pngIt_Init();
 
-const unsigned char eocFlag[] = { 0xFF , 0xEE , 0xDD };
+/*
+	pngIt_Init() 
+	Usage : Initialize pngIt.
+ */
 
+    int pngIt_dispose();
 
-class pngIt {
-	private:
-		FILE *pngInFile;	//PNG Input File.
-		FILE *pngOutFile;	//PNG Output File. 
-		char *plainText;
-		unsigned char signature[8];
-		long int offset;	//Current Offset of File Pointer.
-		long int currentFP;	//Current Position of File Pointer.
-		std::vector<chunk> chunkList;	//A Hash Map container for ChunkList, char * corresnponds to the name of Chunk.
-		chunk tempChunk;
+    char *pngIt_encode(char *src);
 
-		
+    char *pngIt_decode(char *enc);
 
-	public:
-		pngIt();
-		pngIt(char *inFile, char *outFile);
-		pngIt(char *inFile, char *outFile, char *plainText);
+    int pngIt_isPNG();
 
-		bool verifyIsPNG();
-		bool readChunks();
-		bool rebuildIDAT(const char *encodedText);
+    int pngIt_copy();
 
-
-};
-
-#endif // _PNG_IT_H
+}
+#endif				// _PNG_IT_H

@@ -1,43 +1,61 @@
-/*				pngIt
- *	Author : ludkiller
- *	Last updated : 11/29/2013 21:19
- *	brief : Add stuff here.
- *
- *		TODO : 
- *			=> Write base 64 Encoder/Decoder helper functions.	//DONE
- *			=> Add a license.
- */
-
-#include <iostream>
-#include <cstdio>
-#include <cstdlib>
-#include <map>
-
+#include "common.h"
 #include "pngIt.h"
-#include "base64.h"
 
 int main(int argc, char **argv)
 {
- //Enter 
-    pngIt png(argv[1],argv[2]);
 
-    if(!png.verifyIsPNG())  {
-        std::cout<<"Signature Mismatch, File is unlikely to be a PNG file."<<std::endl;
-        exit(-1);
-    }
-    png.readChunks();
-    std::cout<<"[!] Procceding to Encryption stage."<<std::endl;
+	int mflag = 0;
+	int eflag = 0;
+	int dflag = 0;
+	int oflag = 0;
+	int iflag = 0;
+	char c;
+
+	char *mvalue = NULL;
+	char *evalue = NULL;
+	char *dvalue = NULL;
+	char *ovalue = NULL;
+	char *ivalue = NULL;
+
+	while ((c = getopt (argc, argv, "m:e:d:o:i:")) != -1)
+         switch (c)
+           {
+           case 'd':
+             dflag = 1;
+             dvalue = optarg;
+             break;
+           case 'e':
+             eflag = 1;
+             evalue = optarg;
+             break;
+           case 'm':
+             mflag = 1;
+             mvalue = optarg;
+             break;
+           case 'i':
+           	 iflag = 1;
+           	 ivalue = optarg;
+           	 break;
+           case 'o':
+           	 oflag = 1;
+           	 ovalue = optarg;
+           	 break;
+           case '?':
+             //pritn help? 
+             return 1;
+           default:
+             abort ();
+        	}
+
+    //Get Arguments from user.
+   	//Now need to process them
+
+	if(pngIt_Init() != PNG_INIT)	{
+
+		return PNG_INIT_ERROR;
+	}
 
 
-	//Code Above seems to be working fine :)
-	//So we got IDAT, write a function which can 
-	//place the encrypted/encoded plainText into IDAT
-	//such that IDAT is not affected.
 
-	char *plainText = argv[3];
-	std::string encodedText = base64_encode((const unsigned char *)plainText,strlen(plainText));
-	std::cout<<plainText<<std::endl;
-	std::cout<<encodedText<<std::endl;
-	png.rebuildIDAT(encodedText.c_str());
     return 0;
 }

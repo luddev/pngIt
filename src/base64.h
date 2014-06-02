@@ -1,5 +1,5 @@
 /*				pngIt
- *	Author : 
+ *	Author : ???
  *	Last updated : 11/20/2013 00:07
  *	brief : Add stuff here.
  *
@@ -11,8 +11,8 @@
 #ifndef _BASE64_H_
 #define _BASE64_H_
 
-#include <string>
+#include "common.h"
 
-std::string base64_encode(unsigned char const* , unsigned int len);
-std::string base64_decode(std::string const& s);
-#endif 
+std::string base64_encode(unsigned char const *, unsigned int len);
+std::string base64_decode(std::string const &s);
+#endif
