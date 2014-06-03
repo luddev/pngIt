@@ -16,6 +16,8 @@ LD = g++
 #linker Flags
 LDFLAGS = -lpng16 -lc -lstdc++
 
+#debug flag
+DFLAGS = -ggdb
 
 all:link
 
@@ -32,8 +34,8 @@ install:
 	chmod a+x ./build/pngIt
 	cp ./build/pngIt /usr/bin/
 indent:
-	indent -kr src/*.cc -sc -br
-	indent -kr src/*.h -sc -br 
+	indent -kr src/*.* -sc -br 
 	rm src/*.*~
 	
-
+debug:
+	${CC} ${DFLAGS} ${LDFLAGS} src/*.cc -o build/dpngIt

@@ -9,14 +9,12 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cctype>
+#include <cstring>
 
-extern "C"	{
+extern "C" {
 
 #include <unistd.h>
 
 }
-
 #include <libpng16/png.h>
-
-
 #endif				// _COMMON_H

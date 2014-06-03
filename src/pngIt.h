@@ -3,11 +3,27 @@
 
 #include "common.h"
 
+#define SIGNATURE_SIZE 8
+
 extern "C" {
 
 
     extern FILE *pngIt_src;
     extern FILE *pngIt_dst;
+
+    extern png_structp pngIt_structp_in;
+    extern png_infop pngIt_infop_in;
+    extern png_infop pngIt_endinfo;
+
+    extern png_unknown_chunk pngIt_unknown;
+
+    extern png_structp pngIt_structp_out;
+    extern png_infop pngIt_infop_out
+
+    extern int pngIt_height_max;
+    extern int pngIt_width_max;
+
+
 
     enum PNGIT {
 	PNG_INIT,
@@ -27,7 +43,7 @@ extern "C" {
  *	Usage : Initialize pngIt. 
  */
 
-    int pngIt_Init();
+    int pngIt_Init(char *infile, char *outfile);
 
 /*
 	pngIt_Init() 
@@ -43,6 +59,12 @@ extern "C" {
     int pngIt_isPNG();
 
     int pngIt_copy();
+
+
+    //libpng callbacks.
+
+    int pngIt_read_encoded_chunk_callback(png_structp pngptr,png_unknown_chunkp chunk);
+    int pngIt_write_encoded_chunk_callback(png_structp pngptr,png_unknown_chunkp chunk);
 
 }
 #endif				// _PNG_IT_H
